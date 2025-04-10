@@ -1,20 +1,23 @@
-import os
-
+# -*- coding: utf-8 -*-
+# for localized messages
+from __future__ import absolute_import
+from .__init__ import _
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Components.config import config
 from Components.Sources.StaticText import StaticText
+from Components.Pixmap import Pixmap
 from Components.ActionMap import ActionMap
 from Components.Network import iNetwork
 from Components.Sources.List import List
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_SKIN_IMAGE, SCOPE_ACTIVE_SKIN, fileExists
+from os import path as os_path
 
 from .MountView import AutoMountView
 from .MountEdit import AutoMountEdit
+from .AutoMount import iAutoMount, AutoMount
 from .UserManager import UserManager
-from . import _
 
 
 class AutoMountManager(Screen):
@@ -41,6 +44,7 @@ class AutoMountManager(Screen):
 	def __init__(self, session, iface, plugin_path):
 		self.skin_path = plugin_path
 		self.session = session
+		self.hostname = None
 		self.restartLanRef = None
 		Screen.__init__(self, session)
 		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"],
@@ -68,25 +72,21 @@ class AutoMountManager(Screen):
 
 	def updateList(self):
 		self.list = []
-		okpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/ok.png"))
-		self.list.append((_("Add new network mount point"), "add", _("Add a new NFS or CIFS mount point to your Receiver."), okpng))
-		self.list.append((_("Mountpoints management"), "view", _("View, edit or delete mountpoints on your Receiver."), okpng))
-		for file in os.listdir('/etc/enigma2'):
-			if file.endswith('.cache'):
-				if file == 'networkbrowser.cache':
-					continue
-				else:
-					self.list.append((_("User management"), "user", _("View, edit or delete usernames and passwords for your network."), okpng))
-					break
-		self.list.append((_("Change hostname"), "hostname", _("Change the hostname of your Receiver."), okpng))
+		if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/ok.png")):
+			okpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/ok.png"))
+		else:
+			okpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/ok.png"))
+		self.list.append((_("Add new network mount point"), "add", _("Add a new NFS or CIFS mount point to your Dreambox."), okpng))
+		self.list.append((_("Mountpoints management"), "view", _("View, edit or delete mountpoints on your Dreambox."), okpng))
+		self.list.append((_("User management"), "user", _("View, edit or delete usernames and passwords for your network."), okpng))
+		self.list.append((_("Change hostname"), "hostname", _("Change the hostname of your Dreambox."), okpng))
 		self["config"].setList(self.list)
 
 	def exit(self):
-		config.movielist.videodirs.load()
 		self.close()
 
 	def keyOK(self, returnValue=None):
-		if returnValue is None:
+		if returnValue == None:
 			returnValue = self["config"].getCurrent()[1]
 			if returnValue == "add":
 				self.addMount()
@@ -107,17 +107,17 @@ class AutoMountManager(Screen):
 		self.session.open(UserManager, self.skin_path)
 
 	def hostEdit(self):
-		try:
-			with open('/etc/hostname', 'r') as fp:
-				hostname = fp.read()
-		except (IOError, ValueError):
-			return
-		self.session.openWithCallback(self.hostnameCallback, VirtualKeyBoard, title=(_("Enter new hostname for your Receiver")), text=hostname)
+		if os_path.exists("/etc/hostname"):
+			fp = open('/etc/hostname', 'r')
+			self.hostname = fp.read()
+			fp.close()
+			self.session.openWithCallback(self.hostnameCallback, VirtualKeyBoard, title=(_("Enter new hostname for your Dreambox")), text=self.hostname)
 
 	def hostnameCallback(self, callback=None):
-		if callback:
-			with open('/etc/hostname', 'w+') as fp:
-				fp.write(callback)
+		if callback is not None and len(callback):
+			fp = open('/etc/hostname', 'w+')
+			fp.write(callback)
+			fp.close()
 			self.restartLan()
 
 	def restartLan(self):

@@ -26,6 +26,7 @@
 #include "nbtscan.h"
 #include "smbinfo.h"
 #include "showmount.h"
+#include "Python.h"
 
 static PyObject *error;
 
@@ -185,20 +186,27 @@ static PyMethodDef netscanmethods[] = {
 	{NULL, NULL}
 };
 
-static struct PyModuleDef moduledef = {
-	PyModuleDef_HEAD_INIT,
-	"netscan",        /* m_name */
-	"netscan",        /* m_doc */
-	-1,               /* m_size */
-	netscanmethods,   /* m_methods */
-	NULL,             /* m_reload */
-	NULL,             /* m_traverse */
-	NULL,             /* m_clear */
-	NULL,             /* m_free */
-};
+#if PY_MAJOR_VERSION >= 3
+	static struct PyModuleDef moduledef = {
+		PyModuleDef_HEAD_INIT,
+		"netscan",					/* m_name */
+		"Module for netscan",		/* m_doc */
+		-1,									/* m_size */
+		netscanmethods,			/* m_methods */
+		NULL,								/* m_reload */
+		NULL,								/* m_traverse */
+		NULL,								/* m_clear */
+		NULL,								/* m_free */
+	};
 
-void PyInit_netscan(void)
+PyMODINIT_FUNC PyInit_netscan(void)
 {
-	PyModule_Create(&moduledef);
+    return PyModule_Create(&moduledef);
 }
+#else
 
+void initnetscan(void)
+{
+	Py_InitModule("netscan", netscanmethods);
+}
+#endif

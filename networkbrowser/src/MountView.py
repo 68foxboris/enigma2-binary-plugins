@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+# for localized messages
+from __future__ import absolute_import
+from .__init__ import _
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
+from Components.Network import iNetwork
 from Components.Sources.List import List
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_SKIN_IMAGE
-
-from .AutoMount import iAutoMount
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_SKIN_IMAGE, SCOPE_ACTIVE_SKIN, fileExists
+from .AutoMount import iAutoMount, AutoMount
 from .MountEdit import AutoMountEdit
-from . import _
 
 
 class AutoMountView(Screen):
@@ -45,7 +48,6 @@ class AutoMountView(Screen):
 		self.skin_path = plugin_path
 		self.session = session
 		Screen.__init__(self, session)
-		self.setTitle(_("Mount view"))
 		self.mounts = None
 		self.applyConfigRef = None
 		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"],
@@ -70,32 +72,45 @@ class AutoMountView(Screen):
 	def showMountsList(self):
 		self.list = []
 		self.mounts = iAutoMount.getMountsList()
-		for sharename in self.mounts.keys():
+		for sharename in list(self.mounts.keys()):
 			mountentry = iAutoMount.automounts[sharename]
 			self.list.append(self.buildMountViewItem(mountentry))
 		self["config"].setList(self.list)
 
 	def buildMountViewItem(self, entry):
-		activepng = ""
-		mounttypepng = ""
 		if entry["isMounted"] is True:
-			isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/ok.png"))
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/ok.png")):
+							isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/ok.png"))
+						else:
+							isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/ok.png"))
 		if entry["isMounted"] is False:
-			isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/cancel.png"))
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/cancel.png")):
+							isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/cancel.png"))
+						else:
+							isMountedpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/cancel.png"))
 		sharename = entry["sharename"]
-		if entry["host"]:
-			IPdescription = _("Host:") + " " + str(entry["host"])
-		else:
-			IPdescription = _("IP:") + " " + str(entry["ip"])
+		IPdescription = _("IP:") + " " + str(entry["ip"])
 		DIRdescription = _("Dir:") + " " + str(entry["sharedir"])
-		if entry["active"] == 'True' or entry["active"] is True:
-			activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/icons/lock_on.png"))
-		if entry["active"] == 'False' or entry["active"] is False:
-			activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/icons/lock_error.png"))
+		if entry["active"] == 'True' or entry["active"] == True:
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png")):
+							activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png"))
+						else:
+							activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/icons/lock_on.png"))
+		if entry["active"] == 'False' or entry["active"] == False:
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_error.png")):
+							activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_error.png"))
+						else:
+							activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/icons/lock_error.png"))
 		if entry["mounttype"] == 'nfs':
-			mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/i-nfs.png"))
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/i-nfs.png")):
+							mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/i-nfs.png"))
+						else:
+							mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/i-nfs.png"))
 		if entry["mounttype"] == 'cifs':
-			mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/i-smb.png"))
+						if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/i-smb.png")):
+							mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/i-smb.png"))
+						else:
+							mounttypepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkBrowser/icons/i-smb.png"))
 		return ((isMountedpng, sharename, IPdescription, DIRdescription, activepng, mounttypepng))
 
 	def exit(self):
@@ -108,7 +123,7 @@ class AutoMountView(Screen):
 			self.session.openWithCallback(self.MountEditClosed, AutoMountEdit, self.skin_path, iAutoMount.automounts[returnValue])
 
 	def MountEditClosed(self, returnValue=None):
-		if returnValue is None:
+		if returnValue == None:
 			self.showMountsList()
 
 	def delete(self, returnValue=None):
