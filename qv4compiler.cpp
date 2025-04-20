@@ -12,6 +12,7 @@
 #include <private/qqmlirbuilder_p.h>
 #include <QCryptographicHash>
 #include <QtEndian>
+#include <cstdint>
 
 // Efficient implementation that takes advantage of powers of two.
 
