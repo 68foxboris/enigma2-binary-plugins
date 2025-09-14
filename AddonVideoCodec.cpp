@@ -126,28 +126,28 @@ bool CAddonVideoCodec::CopyToInitData(VIDEOCODEC_INITDATA &initData, CDVDStreamI
     switch (hints.profile)
     {
     case 0:
-    case FF_PROFILE_UNKNOWN:
+    case AV_PROFILE_UNKNOWN:
       initData.codecProfile = STREAMCODEC_PROFILE::CodecProfileUnknown;
       break;
-    case FF_PROFILE_H264_BASELINE:
+    case AV_PROFILE_H264_BASELINE:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileBaseline;
       break;
-    case FF_PROFILE_H264_MAIN:
+    case AV_PROFILE_H264_MAIN:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileMain;
       break;
-    case FF_PROFILE_H264_EXTENDED:
+    case AV_PROFILE_H264_EXTENDED:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileExtended;
       break;
-    case FF_PROFILE_H264_HIGH:
+    case AV_PROFILE_H264_HIGH:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileHigh;
       break;
-    case FF_PROFILE_H264_HIGH_10:
+    case AV_PROFILE_H264_HIGH_10:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileHigh10;
       break;
-    case FF_PROFILE_H264_HIGH_422:
+    case AV_PROFILE_H264_HIGH_422:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileHigh422;
       break;
-    case FF_PROFILE_H264_HIGH_444_PREDICTIVE:
+    case AV_PROFILE_H264_HIGH_444_PREDICTIVE:
       initData.codecProfile = STREAMCODEC_PROFILE::H264CodecProfileHigh444Predictive;
       break;
     default:
@@ -161,19 +161,19 @@ bool CAddonVideoCodec::CopyToInitData(VIDEOCODEC_INITDATA &initData, CDVDStreamI
     initData.codec = VIDEOCODEC_VP9;
     switch (hints.profile)
     {
-    case FF_PROFILE_UNKNOWN:
+    case AV_PROFILE_UNKNOWN:
       initData.codecProfile = STREAMCODEC_PROFILE::CodecProfileUnknown;
       break;
-    case FF_PROFILE_VP9_0:
+    case AV_PROFILE_VP9_0:
       initData.codecProfile = STREAMCODEC_PROFILE::VP9CodecProfile0;
       break;
-    case FF_PROFILE_VP9_1:
+    case AV_PROFILE_VP9_1:
       initData.codecProfile = STREAMCODEC_PROFILE::VP9CodecProfile1;
       break;
-    case FF_PROFILE_VP9_2:
+    case AV_PROFILE_VP9_2:
       initData.codecProfile = STREAMCODEC_PROFILE::VP9CodecProfile2;
       break;
-    case FF_PROFILE_VP9_3:
+    case AV_PROFILE_VP9_3:
       initData.codecProfile = STREAMCODEC_PROFILE::VP9CodecProfile3;
       break;
     default:
@@ -184,16 +184,16 @@ bool CAddonVideoCodec::CopyToInitData(VIDEOCODEC_INITDATA &initData, CDVDStreamI
     initData.codec = VIDEOCODEC_AV1;
     switch (hints.profile)
     {
-    case FF_PROFILE_UNKNOWN:
+    case AV_PROFILE_UNKNOWN:
       initData.codecProfile = STREAMCODEC_PROFILE::CodecProfileUnknown;
       break;
-    case FF_PROFILE_AV1_MAIN:
+    case AV_PROFILE_AV1_MAIN:
       initData.codecProfile = STREAMCODEC_PROFILE::AV1CodecProfileMain;
       break;
-    case FF_PROFILE_AV1_HIGH:
+    case AV_PROFILE_AV1_HIGH:
       initData.codecProfile = STREAMCODEC_PROFILE::AV1CodecProfileHigh;
       break;
-    case FF_PROFILE_AV1_PROFESSIONAL:
+    case AV_PROFILE_AV1_PROFESSIONAL:
       initData.codecProfile = STREAMCODEC_PROFILE::AV1CodecProfileProfessional;
       break;
     default:
