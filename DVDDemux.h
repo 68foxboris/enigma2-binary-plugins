@@ -78,8 +78,8 @@ public:
     dvdNavId = 0;
     demuxerId = -1;
     codec_fourcc = 0;
-    profile = FF_PROFILE_UNKNOWN;
-    level = FF_LEVEL_UNKNOWN;
+    profile = AV_PROFILE_UNKNOWN;
+    level = AV_LEVEL_UNKNOWN;
     type = STREAM_NONE;
     source = STREAM_SOURCE_NONE;
     iDuration = 0;
