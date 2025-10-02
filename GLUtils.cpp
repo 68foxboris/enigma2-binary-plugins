@@ -42,7 +42,7 @@ constexpr auto glErrors = make_map<GLenum, std::string_view>({
 #endif
 });
 
-#ifdef TARGET_LINUX
+#ifdef TARGET_LINUX && !defined(TARGET_STB)
 constexpr auto glErrorSource = make_map<GLenum, std::string_view>({
 #ifdef HAS_GLES
     X(GL_DEBUG_SOURCE_API_KHR),
@@ -105,7 +105,7 @@ constexpr auto glErrorSeverity = make_map<GLenum, std::string_view>({
 
 void KODI::UTILS::GL::GlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-#ifdef TARGET_LINUX
+#ifdef TARGET_LINUX && !defined(TARGET_STB)
   const std::string_view sourceStr = glErrorSource.get(source).value_or("");
   const std::string_view typeStr = glErrorType.get(type).value_or("");
   const std::string_view severityStr = glErrorSeverity.get(severity).value_or("");
