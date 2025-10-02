@@ -85,15 +85,18 @@ constexpr auto eglErrors = make_map<EGLenum, std::string_view>({
 });
 
 constexpr auto eglErrorType = make_map<EGLint, std::string_view>({
+#if !defined(TARGET_STB)
     X(EGL_DEBUG_MSG_CRITICAL_KHR),
     X(EGL_DEBUG_MSG_ERROR_KHR),
     X(EGL_DEBUG_MSG_WARN_KHR),
     X(EGL_DEBUG_MSG_INFO_KHR),
+#endif
 });
 #undef X
 
 } // namespace
 
+#if !defined(TARGET_STB)
 void EglErrorCallback(EGLenum error,
                       const char* command,
                       EGLint messageType,
