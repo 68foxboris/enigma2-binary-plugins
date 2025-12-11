@@ -193,18 +193,18 @@ macro(buildFFMPEG)
 
     BUILD_DEP_TARGET()
 
-    find_program(BASH_COMMAND bash)
-    if(NOT BASH_COMMAND)
-      message(FATAL_ERROR "Internal FFmpeg requires bash.")
-    endif()
+  # find_program(BASH_COMMAND bash)
+  # if(NOT BASH_COMMAND)
+  #   message(FATAL_ERROR "Internal FFmpeg requires bash.")
+  # endif()
 
     if(XCODE)
       set(xcode_linker ${CMAKE_CXX_COMPILER})
     endif()
 
     file(WRITE ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
-  "#!${BASH_COMMAND}
-  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* || $@ == *MacOS/Kodi* || $@ == *${APP_NAME}.app/${APP_NAME}* ]]
+  "#!/bin/bash
+  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* || $@ == *${APP_NAME}.app/${APP_NAME}* ]]
   then
     avcodec=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
     avformat=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavformat`
