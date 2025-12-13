@@ -272,7 +272,7 @@ if(WITH_FFMPEG)
 else()
   # We track multiple versions due to API changes. For dependsbuild or windows, we always
   # have latest version to properly track rebuiling.
-  if(KODI_DEPENDSBUILD OR (WIN32 OR WINDOWS_STORE))
+  if(KODI_DEPENDSBUILD OR (WIN32 OR WINDOWS_STORE)) OR STREQUAL stb
     # required ffmpeg library versions - tools/depends/target/ffmpeg versions
     set(REQUIRED_FFMPEG_VERSION 8.0.1)
     set(_avutil_ver "=60.8.100")
