@@ -111,6 +111,10 @@ macro(buildFFMPEG)
                                -DENABLE_VDPAU=${ENABLE_VDPAU}
                                -DEXTRA_FLAGS=${FFMPEG_EXTRA_FLAGS})
 
+  if(WITH_FFMPEG STREQUAL stb)
+    list(APPEND FFMPEG_OPTIONS -DFFMPEG_TARGET=${FFMPEG_TARGET})
+  endif()
+
     if(KODI_DEPENDSBUILD)
       set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                      -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
@@ -166,13 +170,13 @@ macro(buildFFMPEG)
 
     BUILD_DEP_TARGET()
 
-    find_program(BASH_COMMAND bash)
-    if(NOT BASH_COMMAND)
-      message(FATAL_ERROR "Internal FFmpeg requires bash.")
-    endif()
+#   find_program(BASH_COMMAND bash)
+#   if(NOT BASH_COMMAND)
+#     message(FATAL_ERROR "Internal FFmpeg requires bash.")
+#   endif()
     file(WRITE ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
-  "#!${BASH_COMMAND}
-  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* || $@ == *MacOS/Kodi* ]]
+  "#!/bin/bash
+  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* ]]
   then
     avcodec=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
     avformat=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavformat`
@@ -186,6 +190,7 @@ macro(buildFFMPEG)
   else
     $@
   fi")
+
     file(COPY ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
          DESTINATION ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}
          FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
@@ -232,19 +237,22 @@ endmacro()
 # Allows building with external ffmpeg not found in system paths,
 # without library version checks
 if(WITH_FFMPEG)
-  set(FFMPEG_PATH ${WITH_FFMPEG})
-  message(STATUS "Warning: FFmpeg version checking disabled")
-  set(REQUIRED_FFMPEG_VERSION undef)
-else()
-  # required ffmpeg library versions
-  set(REQUIRED_FFMPEG_VERSION 7.0.0)
-  set(_avcodec_ver ">=61.3.100")
-  set(_avfilter_ver ">=10.1.100")
-  set(_avformat_ver ">=61.1.100")
-  set(_avutil_ver ">=59.8.100")
-  set(_postproc_ver ">=58.1.100")
-  set(_swresample_ver ">=5.1.100")
-  set(_swscale_ver ">=8.1.100")
+  if(WITH_FFMPEG STREQUAL stb)
+    set(FFMPEG_TARGET ${WITH_FFMPEG})
+    set(REQUIRED_FFMPEG_VERSION 5.0.0)
+  else()
+   set(FFMPEG_TARGET "")
+    set(FFMPEG_PATH ${WITH_FFMPEG})
+    message(STATUS "Warning: FFmpeg version checking disabled")
+    set(REQUIRED_FFMPEG_VERSION undef)
+    unset(_avcodec_ver)
+    unset(_avfilter_ver)
+    unset(_avformat_ver)
+    unset(_avutil_ver)
+    unset(_postproc_ver)
+    unset(_swresample_ver)
+    unset(_swscale_ver)
+  endif()
 endif()
 
 # Allows building with external ffmpeg not found in system paths,
