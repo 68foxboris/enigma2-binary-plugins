@@ -13,6 +13,9 @@ option('gst-examples', type : 'feature', value : 'auto', description : 'Build gs
 option('python', type : 'feature', value : 'auto')
 option('python-exe', type: 'string', value: 'python3', description: 'Path or name of the Python interpreter to build for')
 option('sharp', type : 'feature', value : 'disabled')
+
+option('installed_tests', type : 'boolean', value : false, description : 'Enable installed tests')
+
 # External subprojects
 option('tls', type : 'feature', value : 'auto', description : 'TLS support using glib-networking as a subproject')
 option('libnice', type : 'feature', value : 'auto', description: 'ICE support using libnice as a subproject')
