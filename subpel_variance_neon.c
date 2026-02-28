@@ -21,6 +21,82 @@
 #include "aom_dsp/arm/mem_neon.h"
 #include "aom_dsp/arm/subpel_variance_neon.h"
 
+extern unsigned int aom_variance8x8_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance16x16_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance16x32_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance16x64_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance32x8_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance32x16_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance32x32_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance32x64_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance32x128_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance64x8_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance64x16_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance64x32_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance64x64_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
++extern unsigned int aom_variance64x128_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance128x8_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance128x16_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance128x32_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance128x64_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
+extern unsigned int aom_variance128x128_neon(const uint8_t *a, int a_stride,
+                                         const uint8_t *b, int b_stride,
+                                         unsigned int *sse);
+
 #define SUBPEL_VARIANCE_WXH_NEON(w, h, padding)                          \
   unsigned int aom_sub_pixel_variance##w##x##h##_neon(                   \
       const uint8_t *src, int src_stride, int xoffset, int yoffset,      \
