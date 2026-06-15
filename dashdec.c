@@ -1637,7 +1637,6 @@ static struct fragment *get_current_fragment(struct representation *pls)
             }
             seg->size = seg_ptr->size;
             seg->url_offset = seg_ptr->url_offset;
-            seg->seekable = seg_ptr->seekable;
             return seg;
         } else if (c->is_live) {
             if (reload_count++ >= c->max_reload) {
@@ -2405,7 +2404,6 @@ static const AVOption dash_options[] = {
     { "cenc_decryption_keys", "Media decryption keys by KID (hex)", OFFSET(cenc_decryption_keys), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
     { "cenc_decryption_video_key", "Media decryption video key scheme_cenc (hex)", OFFSET(cenc_decryption_video_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
     { "cenc_decryption_audio_key", "Media decryption audio key scheme_cenc (hex)", OFFSET(cenc_decryption_audio_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
-    { "fake_last_subtitle", "Insert fake last subtitle to prevent subtitle stream end befor audio/video", OFFSET(fake_last_subtitle), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 1, .flags = FLAGS },
     { "max_reload", "Maximum number of manifest reloads in get_current_fragment() before giving up",
         OFFSET(max_reload), AV_OPT_TYPE_INT, { .i64 = 100 }, 0, INT_MAX, FLAGS },
     {NULL}
