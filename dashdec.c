@@ -1637,6 +1637,7 @@ static struct fragment *get_current_fragment(struct representation *pls)
             }
             seg->size = seg_ptr->size;
             seg->url_offset = seg_ptr->url_offset;
+            seg->seekable = seg_ptr->seekable;
             return seg;
         } else if (c->is_live) {
             if (reload_count++ >= c->max_reload) {
@@ -1646,6 +1647,7 @@ static struct fragment *get_current_fragment(struct representation *pls)
                 return NULL;
             }
             refresh_manifest(pls->parent);
+            pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
         } else {
             break;
         }
