@@ -1151,6 +1151,8 @@ fail:
           c->variants[0]->playlists[0]->type == PLS_TYPE_EVENT))
         c->ctx->ctx_flags |= AVFMTCTX_UNSEEKABLE;
 
+    update_duration(c->ctx);
+
     if (c->n_variants && c->variants[0]->n_playlists &&
         c->variants[0]->playlists[0]->type == PLS_TYPE_EVENT &&
         !c->variants[0]->playlists[0]->finished) {
@@ -2352,16 +2354,6 @@ static int hls_read_header(AVFormatContext *s)
             av_log(s, AV_LOG_WARNING, "Empty segment [%s]\n", c->variants[i]->playlists[0]->url);
             c->variants[i]->playlists[0]->broken = 1;
         }
-    }
-
-    /* Calculate the total duration of the stream if all segments are
-     * available (finished or EVENT playlists). */
-    if (c->variants[0]->playlists[0]->finished ||
-        c->variants[0]->playlists[0]->type == PLS_TYPE_EVENT) {
-        int64_t duration = 0;
-        for (i = 0; i < c->variants[0]->playlists[0]->n_segments; i++)
-            duration += c->variants[0]->playlists[0]->segments[i]->duration;
-        s->duration = duration;
     }
 
     /* Associate renditions with variants */
