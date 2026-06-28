@@ -2644,7 +2644,7 @@ typedef struct md5_ctx	MD5_CTX;
 #if NETTLE_VERSION_MAJOR > 3
 #define MD5_Final(dig,ctx)	md5_digest(ctx,dig)
 #else
-#define MD5_Final(dig,ctx)	md5_digest(ctx,MD5_DIGEST_LENGTH,dig)
+#define MD5_Final(dig,ctx)	md5_digest(ctx,dig)
 #endif
 #else
 #endif

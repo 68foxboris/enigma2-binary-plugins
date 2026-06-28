@@ -56,7 +56,7 @@ typedef arc4_context *	RC4_handle;
 #if NETTLE_VERSION_MAJOR > 3
 #define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(&ctx, dig)
 #else
-#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(&ctx, SHA256_DIGEST_LENGTH, dig)
+#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(&ctx, dig)
 #endif
 #define HMAC_close(ctx)
 
