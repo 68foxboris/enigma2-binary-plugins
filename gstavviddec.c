@@ -3000,7 +3000,6 @@ gst_ffmpegviddec_register (GstPlugin * plugin)
     if (in_plugin->id == AV_CODEC_ID_RAWVIDEO ||
         in_plugin->id == AV_CODEC_ID_V210 ||
         in_plugin->id == AV_CODEC_ID_V210X ||
-        in_plugin->id == AV_CODEC_ID_V308 ||
         in_plugin->id == AV_CODEC_ID_V408 ||
         in_plugin->id == AV_CODEC_ID_V410 || in_plugin->id == AV_CODEC_ID_R210
 #if LIBAVCODEC_VERSION_MAJOR < 61
