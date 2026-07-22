@@ -1667,9 +1667,7 @@ void FFmpegStream::ParsePacket(AVPacket* pkt)
     if (!stream)
       return;
 
-    if (parser->second->m_parserCtx &&
-        parser->second->m_parserCtx->parser &&
-        !st->codecpar->extradata)
+    if (parser->second->m_parserCtx && !st->codecpar->extradata)
     {
       FFmpegExtraData retExtraData = GetPacketExtradata(pkt, st->codecpar);
       if (retExtraData)
@@ -1677,29 +1675,30 @@ void FFmpegStream::ParsePacket(AVPacket* pkt)
         st->codecpar->extradata_size = retExtraData.GetSize();
         st->codecpar->extradata = retExtraData.TakeData();
 
-        if (parser->second->m_parserCtx->parser->av_parser_parse2)
-        {
-          parser->second->m_codecCtx->extradata = st->codecpar->extradata;
-          parser->second->m_codecCtx->extradata_size = st->codecpar->extradata_size;
-          const uint8_t* outbufptr;
-          int bufSize;
-          parser->second->m_parserCtx->flags |= PARSER_FLAG_COMPLETE_FRAMES;
-          parser->second->m_parserCtx->parser->av_parser_parse2(parser->second->m_parserCtx,
-                                                            parser->second->m_codecCtx,
-                                                            &outbufptr, &bufSize,
-                                                            pkt->data, pkt->size);
-          parser->second->m_codecCtx->extradata = nullptr;
-          parser->second->m_codecCtx->extradata_size = 0;
+        parser->second->m_codecCtx->extradata = st->codecpar->extradata;
+        parser->second->m_codecCtx->extradata_size = st->codecpar->extradata_size;
+        const uint8_t* outbufptr;
+        int bufSize;
+        parser->second->m_parserCtx->flags |= PARSER_FLAG_COMPLETE_FRAMES;
+        
+        // Use av_parser_parse2() instead of calling through function pointer
+        av_parser_parse2(parser->second->m_parserCtx,
+                         parser->second->m_codecCtx,
+                         &outbufptr, &bufSize,
+                         pkt->data, pkt->size,
+                         AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0);
+        
+        parser->second->m_codecCtx->extradata = nullptr;
+        parser->second->m_codecCtx->extradata_size = 0;
 
-          if (parser->second->m_parserCtx->width != 0)
-          {
-            st->codecpar->width = parser->second->m_parserCtx->width;
-            st->codecpar->height = parser->second->m_parserCtx->height;
-          }
-          else
-          {
-            Log(LOGLEVEL_ERROR, "CDVDDemuxFFmpeg::ParsePacket() invalid width/height");
-          }
+        if (parser->second->m_parserCtx->width != 0)
+        {
+          st->codecpar->width = parser->second->m_parserCtx->width;
+          st->codecpar->height = parser->second->m_parserCtx->height;
+        }
+        else
+        {
+          Log(LOGLEVEL_ERROR, "CDVDDemuxFFmpeg::ParsePacket() invalid width/height");
         }
       }
     }
