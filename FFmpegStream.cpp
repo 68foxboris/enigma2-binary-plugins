@@ -1677,14 +1677,14 @@ void FFmpegStream::ParsePacket(AVPacket* pkt)
         st->codecpar->extradata_size = retExtraData.GetSize();
         st->codecpar->extradata = retExtraData.TakeData();
 
-        if (parser->second->m_parserCtx->parser->parser_parse)
+        if (parser->second->m_parserCtx->parser->parser_parse2)
         {
           parser->second->m_codecCtx->extradata = st->codecpar->extradata;
           parser->second->m_codecCtx->extradata_size = st->codecpar->extradata_size;
           const uint8_t* outbufptr;
           int bufSize;
           parser->second->m_parserCtx->flags |= PARSER_FLAG_COMPLETE_FRAMES;
-          parser->second->m_parserCtx->parser->parser_parse(parser->second->m_parserCtx,
+          parser->second->m_parserCtx->parser->parser_parse2(parser->second->m_parserCtx,
                                                             parser->second->m_codecCtx,
                                                             &outbufptr, &bufSize,
                                                             pkt->data, pkt->size);
