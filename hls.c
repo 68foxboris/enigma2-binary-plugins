@@ -871,6 +871,9 @@ static int parse_playlist(HLSContext *c, const char *url,
         if (c->http_persistent)
             av_dict_set(&opts, "multiple_requests", "1", 0);
 
+        // don't use byterange when loading playlist - some servers don't like that and return HTTP 416
+        av_dict_set(&opts, "seekable", "0", 0);
+
         ret = open_url(c->ctx, &in, url, &opts, NULL, NULL);
         av_dict_free(&opts);
         if (ret < 0)
